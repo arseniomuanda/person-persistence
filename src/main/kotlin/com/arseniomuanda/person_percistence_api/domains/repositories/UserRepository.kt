@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository : JpaRepository<UserModel, Long> {
     fun findAllByOrderByCreatedAtDesc(): Iterable<UserModel>
+    fun existsByEmail(email: String): Boolean
 }

@@ -16,3 +16,7 @@ fun String.toSlug(): String = lowercase(Locale.getDefault())
 fun String.byCrypt(): String {
    return BCrypt.hashpw(this, BCrypt.gensalt())
 }
+
+fun String.getFistLowercase(): String {
+    return this.split(" ").first().lowercase()
+}

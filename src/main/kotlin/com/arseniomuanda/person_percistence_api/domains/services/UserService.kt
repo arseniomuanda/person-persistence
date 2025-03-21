@@ -6,6 +6,7 @@ import com.arseniomuanda.person_percistence_api.dtos.CreateUser
 import com.arseniomuanda.person_percistence_api.dtos.UpdateUser
 import com.arseniomuanda.person_percistence_api.handlers.InvalidRequestException
 import com.arseniomuanda.person_percistence_api.utils.byCrypt
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.validation.annotation.Validated
@@ -15,25 +16,21 @@ import org.springframework.web.server.ResponseStatusException
 @Validated
 class UserService(private val repository: UserRepository) {
     fun newUser(userDTO: CreateUser): UserModel {
+        val user = mapperToEntity(userDTO)
         //validateRequest(userDTO)
-        return repository.save(mapperToEntity(userDTO))
+        if (repository.existsByEmail(user.email)) {
+            throw DataIntegrityViolationException("Email '${user.email}' already exists.")
+        }
+        return repository.save(user)
     }
 
     private fun mapperToEntity(userRequest: CreateUser): UserModel {
         val user: UserModel = UserModel()
         user.email = userRequest.email
         user.name = userRequest.name
-        user.password = userRequest.password
+        user.password = userRequest.password.byCrypt()
 
         return user
-    }
-
-    private fun validateRequest(userRequest: CreateUser) {
-        if (userRequest.name.isBlank()) {
-            throw InvalidRequestException(
-                "User name cannot be blank"
-            )
-        }
     }
 
     fun updateUser(newData: UpdateUser, id: Long): UserModel {

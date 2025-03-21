@@ -1,6 +1,8 @@
 package com.arseniomuanda.person_percistence_api.handlers
 
+import com.arseniomuanda.person_percistence_api.utils.getFistLowercase
 import jakarta.validation.ConstraintViolationException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -13,7 +15,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleConstraintValidationException(
-        e: ConstraintViolationException): ResponseEntity<in Map<String, Any>?> {
+        e: ConstraintViolationException
+    ): ResponseEntity<in Map<String, Any>?> {
         val errorMessages = e.constraintViolations.associate { violation ->
             violation.propertyPath.toString() to violation.message
         }
@@ -44,4 +47,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UploadException::class)
     fun handleUploadException(e: UploadException): ResponseEntity<String> =
         ResponseEntity.status(HttpStatus.CONFLICT).body(e.message)
+
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDataIntegrityViolationException(e: DataIntegrityViolationException): ResponseEntity<MutableMap<String?, String?>> =
+        ResponseEntity(mutableMapOf(e.localizedMessage.getFistLowercase() to e.message), HttpStatus.BAD_REQUEST)
 }
