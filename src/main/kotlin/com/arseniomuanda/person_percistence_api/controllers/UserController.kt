@@ -32,7 +32,8 @@ class UserController(
     @PutMapping("/{id}")
     @ResponseBody
     fun update(@PathVariable id: Long, @RequestBody @Valid newUser: UpdateUser, errors: Errors): ResponseEntity<UserModel> {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(newUser, id))
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(userService.updateUser(newUser, id))
     }
 
 

@@ -40,6 +40,13 @@ dependencies {
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.mindrot:jbcrypt:0.4")
+
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+	//Handle with files like Excel
+	implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.apache.poi:poi:5.4.0")
+	implementation ("org.apache.poi:poi-ooxml:5.4.0")
 }
 
 kotlin {

@@ -1,7 +1,9 @@
 package com.arseniomuanda.person_percistence_api.dtos
 
 import jakarta.validation.constraints.*
+import org.springframework.validation.annotation.Validated
 
+@Validated
 data class CreatePerson(
     @field:NotBlank(message = "O nome completo é obrigatório.")
     val fullName: String,
@@ -20,6 +22,7 @@ data class CreatePerson(
     val country: String,
 
     @field:NotBlank(message = "O telefone é obrigatório.")
+    @field:NotNull(message = "O telefone é obrigatório.")
     @field:Pattern(regexp = "\\+?[0-9]{10,15}", message = "O telefone deve conter entre 10 a 15 dígitos.")
     val phone: String,
 

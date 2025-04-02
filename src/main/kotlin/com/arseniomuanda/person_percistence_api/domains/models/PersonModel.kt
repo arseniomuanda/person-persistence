@@ -1,9 +1,11 @@
 package com.arseniomuanda.person_percistence_api.domains.models
 
 import jakarta.persistence.*
+import lombok.AllArgsConstructor
 import java.time.LocalDateTime
 
 @Entity
+@AllArgsConstructor(staticName = "build")
 class PersonModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

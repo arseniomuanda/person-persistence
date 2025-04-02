@@ -5,6 +5,7 @@ import com.arseniomuanda.person_percistence_api.domains.repositories.PersonRepos
 import com.arseniomuanda.person_percistence_api.domains.services.PersonService
 import com.arseniomuanda.person_percistence_api.dtos.CreatePerson
 import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,12 +21,18 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/people")
 class PeopleController(private val personRepository: PersonRepository, private val personService: PersonService) {
 
+    @GetMapping("/excel")
+    fun getExcel(response: HttpServletResponse){
+        personService.extractExcel(response)
+    }
+
     @RequestMapping
-    fun index() = personRepository.findAll()
+    fun index() = personRepository.findAllByOrderByCreatedAtDesc()
 
     @PostMapping
-    fun store(@Valid @RequestBody newPerson: CreatePerson): PersonModel {
-        return personService.createPerson(newPerson)
+    fun store(@RequestBody @Valid newPerson: CreatePerson): ResponseEntity<PersonModel> {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(personService.createPerson(newPerson))
     }
 
     @GetMapping("/{id}")
